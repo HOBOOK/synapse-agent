@@ -322,13 +322,43 @@ const wrappedRunAnthropic = async (msg: string) => {
 };
 
 async function main() {
-  console.log("===========================================");
-  console.log("  로컬 AI 에이전트 (UI Automation + 비전)");
-  console.log(`  프로바이더: ${provider.toUpperCase()}`);
-  console.log("  파일, 셸, 웹, 화면제어 — 무엇이든 시키세요.");
-  console.log("  종료: exit | 초기화: clear | 중단: stop");
-  console.log("  작업 중에도 메시지 입력 가능 (대기열)");
-  console.log("===========================================\n");
+  const model = provider === "openai" ? "GPT-5.4" : "Claude Sonnet";
+  const toolCount = getOpenAITools().length;
+
+  // 그라데이션 색상 (시안 → 파랑 → 실버)
+  const g = ["\x1b[38;5;51m", "\x1b[38;5;45m", "\x1b[38;5;39m", "\x1b[38;5;33m", "\x1b[38;5;188m", "\x1b[38;5;252m"];
+  const r = "\x1b[0m";
+  const dim = "\x1b[90m";
+  const bold = "\x1b[1m";
+  const cyan = "\x1b[36m";
+  const yellow = "\x1b[33m";
+  const green = "\x1b[32m";
+  const magenta = "\x1b[35m";
+  const white = "\x1b[97m";
+  const box = "\x1b[38;5;240m";
+
+  console.log("");
+  console.log(`${g[0]}  ███████╗${g[1]}██╗   ██╗${g[2]}███╗   ██╗${g[3]} █████╗ ${g[4]}██████╗ ${g[5]}███████╗███████╗${r}`);
+  console.log(`${g[0]}  ██╔════╝${g[1]}╚██╗ ██╔╝${g[2]}████╗  ██║${g[3]}██╔══██╗${g[4]}██╔══██╗${g[5]}██╔════╝██╔════╝${r}`);
+  console.log(`${g[0]}  ███████╗${g[1]} ╚████╔╝ ${g[2]}██╔██╗ ██║${g[3]}███████║${g[4]}██████╔╝${g[5]}███████╗█████╗  ${r}`);
+  console.log(`${g[0]}  ╚════██║${g[1]}  ╚██╔╝  ${g[2]}██║╚██╗██║${g[3]}██╔══██║${g[4]}██╔═══╝ ${g[5]}╚════██║██╔══╝  ${r}`);
+  console.log(`${g[0]}  ███████║${g[1]}   ██║   ${g[2]}██║ ╚████║${g[3]}██║  ██║${g[4]}██║     ${g[5]}███████║███████╗${r}`);
+  console.log(`${g[0]}  ╚══════╝${g[1]}   ╚═╝   ${g[2]}╚═╝  ╚═══╝${g[3]}╚═╝  ╚═╝${g[4]}╚═╝     ${g[5]}╚══════╝╚══════╝${r}`);
+  console.log(`${dim}                                          ${magenta}${bold}A G E N T${r}  ${dim}v1.0.0${r}`);
+  console.log("");
+  console.log(`${box}  ┌───────────────────────────────────────────────────────────┐${r}`);
+  console.log(`${box}  │${r}                                                           ${box}│${r}`);
+  console.log(`${box}  │${r}   ${white}${bold}모델${r}  ${yellow}${model}${r}${" ".repeat(Math.max(0, 17 - model.length))}${white}${bold}도구${r}  ${cyan}${toolCount}개${r}                        ${box}│${r}`);
+  console.log(`${box}  │${r}                                                           ${box}│${r}`);
+  console.log(`${box}  │${r}   ${g[0]}파일${r} ${dim}·${r} ${g[1]}셸${r} ${dim}·${r} ${g[2]}웹${r} ${dim}·${r} ${g[3]}브라우저${r} ${dim}·${r} ${g[4]}데스크탑${r} ${dim}·${r} ${g[5]}UI 자동화${r}     ${box}│${r}`);
+  console.log(`${box}  │${r}                                                           ${box}│${r}`);
+  console.log(`${box}  ├───────────────────────────────────────────────────────────┤${r}`);
+  console.log(`${box}  │${r}                                                           ${box}│${r}`);
+  console.log(`${box}  │${r}   ${green}exit${r} ${dim}종료${r}    ${green}clear${r} ${dim}초기화${r}    ${green}stop${r} ${dim}작업 중단${r}            ${box}│${r}`);
+  console.log(`${box}  │${r}   ${dim}작업 중에도 메시지를 입력하면 대기열에 추가됩니다${r}    ${box}│${r}`);
+  console.log(`${box}  │${r}                                                           ${box}│${r}`);
+  console.log(`${box}  └───────────────────────────────────────────────────────────┘${r}`);
+  console.log("");
 
   while (true) {
     const input = await prompt("\x1b[32m> \x1b[0m");
